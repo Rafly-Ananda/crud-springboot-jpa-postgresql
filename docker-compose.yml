@@ -16,7 +16,7 @@ services:
     image: postgres
     environment:
       POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+      POSTGRES_PASSWORD: alterraroot
       PGDATA: /data/postgres
       POSTGRES_DB: alterra_db
     volumes:
