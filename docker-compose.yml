@@ -18,7 +18,7 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       PGDATA: /data/postgres
-      POSTGRES_DB: alterra_demo_db
+      POSTGRES_DB: alterra_db
     volumes:
       - db:/data/postgres
     ports:
