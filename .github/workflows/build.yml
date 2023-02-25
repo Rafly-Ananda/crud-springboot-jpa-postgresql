@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on: [push]
 
 jobs:
-  test:
+  build:
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
@@ -29,10 +29,26 @@ jobs:
       - name: Upload JAR
         uses: actions/upload-artifact@v3
         with:
-          name: Package
+          name: artifact
           path: staging/spring-data-jpa-0.0.1-SNAPSHOT.jar
 
       - name: Stop containers
         if: always()
         run: docker-compose -f "docker-compose.yml" down
 
+      - name: Download JAR
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          use_existing_version_if_available: false
+          application_name: springboot-postgresql-jpa-crud
+          environment_name: Springbootpostgresqljpacrud-env
+          version_label: ${{github.SHA}}
+          region: ap-southeast-1
+          deployment_package: spring-data-jpa-0.0.1-SNAPSHOT.jar
